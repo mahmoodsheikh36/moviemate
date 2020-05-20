@@ -1,0 +1,11 @@
+* {
+    color: #ccc;
+}
+
+.highlighted {
+    color: red;
+}
+
+.grey {
+    color: grey;
+}
