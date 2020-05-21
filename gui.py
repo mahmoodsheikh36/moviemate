@@ -38,6 +38,7 @@ class MovieWidget(Gtk.Box):
         self.pack_start(self.image, False, False, 0)
         self.pack_start(self.title_label, False, False, 0)
         self.pack_start(self.year_label, False, False, 0)
+        self.set_can_focus(False)
         self.show()
 
 class Window(Gtk.Window):
@@ -88,12 +89,11 @@ class Window(Gtk.Window):
         c = OMDbClient()
         movies = c.search(query)
         for movie in movies:
-            if movie.small_poster:
-                image_url = movie.small_poster
-            else:
-                image_url = movie.poster
+            image_url = movie.poster
             r = requests.get(image_url)
             fname = image_url.split('/')[-1]
+            with open(fname, 'wb') as image_file:
+                image_file.write(r.content)
             movie.poster = fname
             self.safe_add_movie(movie, movies_widget)
 
@@ -103,7 +103,6 @@ class Window(Gtk.Window):
     def add_movie(self, movie, movies_widget):
         movie_widget = MovieWidget(movie.title, movie.year, movie.poster)
         movies_widget.add(movie_widget)
-        print(movies_widget == self.discover_movies_widget)
         self.show_all()
 
     def _style():
